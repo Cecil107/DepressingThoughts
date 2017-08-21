@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_licenses_pref" translatable="false">key_licenses</string>
+    <string name="key_particles_pref" translatable="false">key_particles</string>
+</resources>

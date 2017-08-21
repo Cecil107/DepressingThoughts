@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/title_look_category_pref">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_particles"
+            android:key="@string/key_particles_pref"
+            android:title="@string/title_particles_pref" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_about_category_pref">
+
+        <Preference
+            android:icon="@drawable/ic_licenses"
+            android:key="@string/key_licenses_pref"
+            android:title="@string/title_licenses_pref" />
+
+        <Preference
+            android:icon="@drawable/ic_person_pin"
+            android:summary="@string/summary_developer_pref"
+            android:title="@string/title_developer_pref" />
+
+        <Preference
+            android:icon="@drawable/ic_person_pin"
+            android:summary="@string/summary_twitter_author_pref"
+            android:title="@string/title_twitter_author_pref" />
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/summary_about_pref" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
