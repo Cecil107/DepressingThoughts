@@ -189,7 +189,24 @@ public class AppWidgetConfigureActivity extends Activity {
 
         setContentView(R.layout.activity_app_widget_configure);
 
+        settingUpViews();
 
+        // Find the widget id from the intent.
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+        // If this activity was started with an intent without an app widget ID, finish with an error.
+        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+        }
+
+    }
+
+    private void settingUpViews() {
         Spinner spinnerBackgroundColor = findViewById(R.id.spinnerBackgroundColor);
         String[] backgroundColors = getResources().getStringArray(R.array.widget_colors);
         ArrayAdapter<String> adapterBackground = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, backgroundColors);
@@ -247,21 +264,6 @@ public class AppWidgetConfigureActivity extends Activity {
 
         findViewById(R.id.addBtn).setOnClickListener(mAddOnClickListener);
         findViewById(R.id.previewBtn).setOnClickListener(mPreviewOnClickListener);
-
-        // Find the widget id from the intent.
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        }
-
-        // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            finish();
-            return;
-        }
-
     }
 }
 

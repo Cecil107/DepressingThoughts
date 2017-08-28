@@ -25,10 +25,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,9 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
     private Random random = new Random();
 
     private TextView mDepressingThoughtTxtView;
-    private Button mShareBtn, mSettingsBtn;
     private LinearLayout mLinearLayout;
-    private RelativeLayout mRelativeLayout;
     private ParticlesDrawable mDrawable = new ParticlesDrawable();
     private ProgressBar mProgressBar;
 
@@ -83,36 +79,8 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
         setContentView(R.layout.activity_main);
 
         boolean usingDarkTheme = AppSettings.isDarkThemeTurnedOn(this);
-
-        if (AppSettings.isBackgroundWithParticles(this)) {
-            mRelativeLayout = findViewById(R.id.relativeLayout);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!usingDarkTheme) {
-                    mDrawable.setDotColor(getColor(R.color.colorParticles));
-                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLight));
-                } else {
-                    mDrawable.setDotColor(getColor(R.color.colorParticlesD));
-                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLightD));
-                }
-            } else {
-                if (!usingDarkTheme) {
-                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticles));
-                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLight));
-                } else {
-                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticlesD));
-                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLightD));
-                }
-            }
-            mRelativeLayout.setBackground(mDrawable);
-        }
-        mDepressingThoughtTxtView = findViewById(R.id.thought);
-        mShareBtn = findViewById(R.id.share);
-        mShareBtn.setOnClickListener(this);
-        mSettingsBtn = findViewById(R.id.settings);
-        mSettingsBtn.setOnClickListener(this);
-        mLinearLayout = findViewById(R.id.linearLayout);
-        mLinearLayout.setOnClickListener(this);
-        mProgressBar = findViewById(R.id.progressBar);
+        setParticlesOnBackground(usingDarkTheme);
+        settingUpViews();
 
         createTwitterApiClient();
 
@@ -124,23 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
         connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            oAuthTokenCall.enqueue(new Callback<OAuthToken>() {
-                @Override
-                public void onResponse(Call<OAuthToken> call, Response<OAuthToken> response) {
-                    if (response.isSuccessful()) {
-                        token = response.body();
-                        onExecuted();
-                        showProgressBar(false);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<OAuthToken> call, Throwable t) {
-                    showProgressBar(false);
-                    t.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Failure while requesting token: " + t.toString(), Toast.LENGTH_LONG).show();
-                }
-            });
+            oAuth();
         } else {
             showProgressBar(false);
             mDepressingThoughtTxtView.setText(R.string.no_internet);
@@ -207,6 +159,26 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
         twitterApi = retrofit.create(TwitterApiClient.class);
     }
 
+    private void oAuth() {
+        oAuthTokenCall.enqueue(new Callback<OAuthToken>() {
+            @Override
+            public void onResponse(Call<OAuthToken> call, Response<OAuthToken> response) {
+                if (response.isSuccessful()) {
+                    token = response.body();
+                    onExecuted();
+                    showProgressBar(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OAuthToken> call, Throwable t) {
+                showProgressBar(false);
+                t.printStackTrace();
+                Toast.makeText(MainActivity.this, "Failure while requesting token: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void showTweet() {
         showProgressBar(true);
 
@@ -236,6 +208,38 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
         } else {
             showProgressBar(false);
             mDepressingThoughtTxtView.setText(R.string.no_internet);
+        }
+    }
+
+    private void settingUpViews() {
+        mDepressingThoughtTxtView = findViewById(R.id.thought);
+        findViewById(R.id.share).setOnClickListener(this);
+        findViewById(R.id.settings).setOnClickListener(this);
+        mLinearLayout = findViewById(R.id.linearLayout);
+        mLinearLayout.setOnClickListener(this);
+        mProgressBar = findViewById(R.id.progressBar);
+    }
+
+    private void setParticlesOnBackground(boolean usingDarkTheme) {
+        if (AppSettings.isBackgroundWithParticles(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!usingDarkTheme) {
+                    mDrawable.setDotColor(getColor(R.color.colorParticles));
+                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLight));
+                } else {
+                    mDrawable.setDotColor(getColor(R.color.colorParticlesD));
+                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLightD));
+                }
+            } else {
+                if (!usingDarkTheme) {
+                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticles));
+                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLight));
+                } else {
+                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticlesD));
+                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLightD));
+                }
+            }
+            findViewById(R.id.relativeLayout).setBackground(mDrawable);
         }
     }
 

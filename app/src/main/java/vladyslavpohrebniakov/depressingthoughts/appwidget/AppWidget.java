@@ -61,17 +61,7 @@ public class AppWidget extends AppWidgetProvider {
     public static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
                                        int appWidgetId) {
 
-        final CharSequence widgetText = context.getString(R.string.appwidget_text_loading);
-
-        int backgroundColor = AppWidgetConfigureActivity.loadBackgroundColorPref(context, appWidgetId);
-        int buttonColor = AppWidgetConfigureActivity.loadButtonColorPref(context, appWidgetId);
-        int textColor = AppWidgetConfigureActivity.loadTextColorPref(context, appWidgetId);
-        // Construct the RemoteViews object
-        views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
-        views.setTextViewText(R.id.appwidgetText, widgetText);
-        views.setInt(R.id.relativeLayout, "setBackgroundColor", backgroundColor);
-        views.setTextColor(R.id.updateButton, buttonColor);
-        views.setTextColor(R.id.appwidgetText, textColor);
+        settingUpViews(context, appWidgetId);
 
         Intent intent = new Intent(context, AppWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -84,6 +74,20 @@ public class AppWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    private static void settingUpViews(Context context, int appWidgetId) {
+        CharSequence widgetText = context.getString(R.string.appwidget_text_loading);
+        int backgroundColor = AppWidgetConfigureActivity.loadBackgroundColorPref(context, appWidgetId);
+        int buttonColor = AppWidgetConfigureActivity.loadButtonColorPref(context, appWidgetId);
+        int textColor = AppWidgetConfigureActivity.loadTextColorPref(context, appWidgetId);
+
+        // Construct the RemoteViews object
+        views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
+        views.setTextViewText(R.id.appwidgetText, widgetText);
+        views.setInt(R.id.relativeLayout, "setBackgroundColor", backgroundColor);
+        views.setTextColor(R.id.updateButton, buttonColor);
+        views.setTextColor(R.id.appwidgetText, textColor);
     }
 
     @Override
@@ -123,17 +127,25 @@ public class AppWidget extends AppWidgetProvider {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
+    @Override
+    public void onEnabled(Context context) {
+        startTwitterApi(context);
+        super.onEnabled(context);
+    }
+
     private void getTweet(final Context context) {
         getTweetsCall.clone().enqueue(new Callback<List<Tweet>>() {
             @Override
             public void onResponse(Call<List<Tweet>> call, Response<List<Tweet>> response) {
-                tweets = response.body();
-                if (tweets != null) {
-                    int index = random.nextInt(tweets.size());
-                    views.setTextViewText(R.id.appwidgetText, tweets.get(index).getText());
-                    final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-                    final ComponentName cn = new ComponentName(context, AppWidget.class);
-                    mgr.updateAppWidget(cn, views);
+                if (response.isSuccessful()) {
+                    tweets = response.body();
+                    if (tweets != null) {
+                        int index = random.nextInt(tweets.size());
+                        views.setTextViewText(R.id.appwidgetText, tweets.get(index).getText());
+                        final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+                        final ComponentName cn = new ComponentName(context, AppWidget.class);
+                        mgr.updateAppWidget(cn, views);
+                    }
                 }
             }
 
