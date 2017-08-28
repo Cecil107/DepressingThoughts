@@ -2,4 +2,7 @@
 <resources>
     <string name="key_licenses_pref" translatable="false">key_licenses</string>
     <string name="key_particles_pref" translatable="false">key_particles</string>
+    <string name="key_themes_pref" translatable="false">key_themes_pref</string>
+    <string name="key_rate_pref" translatable="false">key_rate_pref</string>
+    <string name="google_play_app_link" translatable="false">https://play.google.com/store/apps/details?id=vladyslavpohrebniakov.depressingthoughts</string>
 </resources>

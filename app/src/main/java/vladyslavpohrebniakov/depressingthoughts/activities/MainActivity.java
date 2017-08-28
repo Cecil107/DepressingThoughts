@@ -79,16 +79,29 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppSettings.setDarkTheme(this);
         setContentView(R.layout.activity_main);
+
+        boolean usingDarkTheme = AppSettings.isDarkThemeTurnedOn(this);
 
         if (AppSettings.isBackgroundWithParticles(this)) {
             mRelativeLayout = findViewById(R.id.relativeLayout);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mDrawable.setDotColor(getColor(R.color.colorParticles));
-                mDrawable.setLineColor(getColor(R.color.colorPrimaryLight));
+                if (!usingDarkTheme) {
+                    mDrawable.setDotColor(getColor(R.color.colorParticles));
+                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLight));
+                } else {
+                    mDrawable.setDotColor(getColor(R.color.colorParticlesD));
+                    mDrawable.setLineColor(getColor(R.color.colorPrimaryLightD));
+                }
             } else {
-                mDrawable.setDotColor(getResources().getColor(R.color.colorParticles));
-                mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLight));
+                if (!usingDarkTheme) {
+                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticles));
+                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLight));
+                } else {
+                    mDrawable.setDotColor(getResources().getColor(R.color.colorParticlesD));
+                    mDrawable.setLineColor(getResources().getColor(R.color.colorPrimaryLightD));
+                }
             }
             mRelativeLayout.setBackground(mDrawable);
         }

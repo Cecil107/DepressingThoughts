@@ -22,6 +22,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -39,6 +40,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import vladyslavpohrebniakov.depressingthoughts.R;
+import vladyslavpohrebniakov.depressingthoughts.activities.AppWidgetConfigureActivity;
 import vladyslavpohrebniakov.depressingthoughts.activities.MainActivity;
 import vladyslavpohrebniakov.depressingthoughts.retrofit.ApiKeys;
 import vladyslavpohrebniakov.depressingthoughts.retrofit.OAuthToken;
@@ -47,24 +49,29 @@ import vladyslavpohrebniakov.depressingthoughts.retrofit.TwitterApiClient;
 
 public class AppWidget extends AppWidgetProvider {
 
+    private static RemoteViews views;
     private TwitterApiClient twitterApi;
     private OAuthToken token;
     private Call<OAuthToken> oAuthTokenCall;
     private Call<List<Tweet>> getTweetsCall;
     private String credentials = Credentials.basic(ApiKeys.CONSUMER_KEY, ApiKeys.CONSUMER_SECRET);
-
     private List<Tweet> tweets;
     private Random random = new Random();
 
-    private RemoteViews views;
-
-    void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
-                         int appWidgetId) {
+    public static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager,
+                                       int appWidgetId) {
 
         final CharSequence widgetText = context.getString(R.string.appwidget_text_loading);
+
+        int backgroundColor = AppWidgetConfigureActivity.loadBackgroundColorPref(context, appWidgetId);
+        int buttonColor = AppWidgetConfigureActivity.loadButtonColorPref(context, appWidgetId);
+        int textColor = AppWidgetConfigureActivity.loadTextColorPref(context, appWidgetId);
         // Construct the RemoteViews object
         views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
         views.setTextViewText(R.id.appwidgetText, widgetText);
+        views.setInt(R.id.relativeLayout, "setBackgroundColor", backgroundColor);
+        views.setTextColor(R.id.updateButton, buttonColor);
+        views.setTextColor(R.id.appwidgetText, textColor);
 
         Intent intent = new Intent(context, AppWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -75,27 +82,6 @@ public class AppWidget extends AppWidgetProvider {
         PendingIntent activityPendingIntent = PendingIntent.getActivity(context, 0, configIntent, 0);
         views.setOnClickPendingIntent(R.id.appwidgetText, activityPendingIntent);
 
-        createTwitterApi();
-
-        oAuthTokenCall = twitterApi.postCredentials(TwitterApiClient.CLIENT_CREDENTIALS);
-        getTweetsCall = twitterApi.getTweet(TwitterApiClient.USER_ID, TwitterApiClient.COUNT);
-
-        oAuthTokenCall.enqueue(new Callback<OAuthToken>() {
-            @Override
-            public void onResponse(Call<OAuthToken> call, Response<OAuthToken> response) {
-                if (response.isSuccessful()) {
-                    token = response.body();
-                    views.setTextViewText(R.id.appwidgetText, token.toString());
-                    getTweet(context);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<OAuthToken> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -103,6 +89,8 @@ public class AppWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        startTwitterApi(context);
+
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -120,11 +108,19 @@ public class AppWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onEnabled(Context context) {
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        // When the user deletes the widget, delete the preference associated with it.
+        for (int appWidgetId : appWidgetIds) {
+            AppWidgetConfigureActivity.deleteBackgroundColorPref(context, appWidgetId);
+            AppWidgetConfigureActivity.deleteButtonColorPref(context, appWidgetId);
+            AppWidgetConfigureActivity.deleteTextColorPref(context, appWidgetId);
+        }
     }
 
     @Override
-    public void onDisabled(Context context) {
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        startTwitterApi(context);
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 
     private void getTweet(final Context context) {
@@ -148,7 +144,7 @@ public class AppWidget extends AppWidgetProvider {
         });
     }
 
-    private void createTwitterApi() {
+    private void startTwitterApi(final Context context) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -169,6 +165,24 @@ public class AppWidget extends AppWidgetProvider {
                 .build();
 
         twitterApi = retrofit.create(TwitterApiClient.class);
+
+        oAuthTokenCall = twitterApi.postCredentials(TwitterApiClient.CLIENT_CREDENTIALS);
+        getTweetsCall = twitterApi.getTweet(TwitterApiClient.USER_ID, TwitterApiClient.COUNT);
+
+        oAuthTokenCall.enqueue(new Callback<OAuthToken>() {
+            @Override
+            public void onResponse(Call<OAuthToken> call, Response<OAuthToken> response) {
+                if (response.isSuccessful()) {
+                    token = response.body();
+                    getTweet(context);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OAuthToken> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
 

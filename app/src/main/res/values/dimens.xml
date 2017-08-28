@@ -1,5 +1,9 @@
 <resources>
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="bottom_buttons_height">48dp</dimen>
-    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="spinner_margin">8dp</dimen>
+    <dimen name="preview_widget_height">150dp</dimen>
+    <dimen name="preview_area_height">300dp</dimen>
+    <dimen name="widget_preview_margin">32dp</dimen>
 </resources>

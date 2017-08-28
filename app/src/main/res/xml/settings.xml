@@ -9,6 +9,12 @@
             android:key="@string/key_particles_pref"
             android:title="@string/title_particles_pref" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_colors"
+            android:key="@string/key_themes_pref"
+            android:title="@string/pref_title_themes" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_about_category_pref">
@@ -27,6 +33,11 @@
             android:icon="@drawable/ic_person_pin"
             android:summary="@string/summary_twitter_author_pref"
             android:title="@string/title_twitter_author_pref" />
+
+        <Preference
+            android:icon="@drawable/ic_rate_review"
+            android:key="@string/key_rate_pref"
+            android:title="@string/pref_title_rate_the_app" />
 
         <Preference
             android:selectable="false"

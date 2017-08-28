@@ -27,4 +27,19 @@ public class AppSettings {
         return sharedPrefs.getBoolean(context.getString(R.string.key_particles_pref), true);
     }
 
+    public static void setDarkTheme(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean darkTheme = sharedPrefs.getBoolean(context.getString(R.string.key_themes_pref), false);
+        if (darkTheme) {
+            context.setTheme(R.style.AppThemeDark);
+        } else {
+            context.setTheme(R.style.AppThemeLight);
+        }
+    }
+
+    public static boolean isDarkThemeTurnedOn(Context context) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPrefs.getBoolean(context.getString(R.string.key_themes_pref), false);
+    }
+
 }

@@ -15,13 +15,14 @@
   ~ limitations under the License.
   -->
 
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="vladyslavpohrebniakov.depressingthoughts.activities.AppWidgetConfigureActivity"
-    android:initialKeyguardLayout="@layout/app_widget"
-    android:initialLayout="@layout/app_widget"
-    android:minHeight="250dp"
-    android:minWidth="250dp"
-    android:previewImage="@drawable/appwidget_preview"
-    android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen" />
+<android.support.v7.widget.AppCompatCheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical|start"
+    android:maxLines="1"
+    android:padding="@dimen/spinner_margin"
+    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+    tools:text="Item" />

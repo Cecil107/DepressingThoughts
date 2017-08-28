@@ -16,6 +16,8 @@
 
 package vladyslavpohrebniakov.depressingthoughts.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -45,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
             final String keyLicenses = getResources().getString(R.string.key_licenses_pref);
+            final String keyRate = getResources().getString(R.string.key_rate_pref);
 
             Preference licensesPref = getPreferenceScreen().findPreference(keyLicenses);
             licensesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -56,6 +59,17 @@ public class SettingsActivity extends AppCompatActivity {
                             .show();
 
                     return false;
+                }
+            });
+
+            Preference ratePref = getPreferenceScreen().findPreference(keyRate);
+            final String googlePlayAppLink = getResources().getString(R.string.google_play_app_link);
+            ratePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayAppLink));
+                    startActivity(i);
+                    return true;
                 }
             });
         }
