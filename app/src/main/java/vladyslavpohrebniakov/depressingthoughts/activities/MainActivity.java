@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnExecuteCallList
                 public void onFailure(Call<List<Tweet>> call, Throwable t) {
                     showProgressBar(false);
                     Log.e(getClass().getSimpleName(), t.getMessage());
-                    Toast.makeText(MainActivity.this, "Fail while requesting depressing thoughts: " + t.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Fail while requesting Trump bot tweets: " + t.toString(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
