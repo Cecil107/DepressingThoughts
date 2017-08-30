@@ -29,7 +29,7 @@ public interface TwitterApiClient {
 
     String BASE_URL = "https://api.twitter.com/";
     String CLIENT_CREDENTIALS = "client_credentials";
-    int USER_ID = 198644497;
+    int USER_ID = 214677229;
     int COUNT = 200;
 
     @FormUrlEncoded
