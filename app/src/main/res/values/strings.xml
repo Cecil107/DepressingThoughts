@@ -23,19 +23,19 @@
     <string name="test">Something</string>
 
     <string name="tap_here">Tap here to
-                            \n read another depressing thought</string>
+                            \n read another funny Trump bot tweet.</string>
 
     <string name="title_developer_pref">Developer</string>
     <string name="summary_developer_pref">Vladyslav Pohrebniakov</string>
-    <string name="summary_twitter_author_pref">\@Time4Depression</string>
+    <string name="summary_twitter_author_pref">\@MechanicalTrump</string>
     <string name="title_twitter_author_pref">Depressing thoughts by Twitter account</string>
     <string name="title_licenses_pref">Open source licenses</string>
     <string name="title_particles_pref">Show particles in background</string>
     <string name="title_about_category_pref">About</string>
     <string name="title_look_category_pref">Look</string>
-    <string name="summary_about_pref">This is humor app. Don\'t be depressed.</string>
+    <string name="summary_about_pref">This is humor app. Don\'t take it seriously.</string>
 
-    <string name="no_internet">Is your Internet depressed too? Check its connection.</string>
+    <string name="no_internet">Is your Internet ded? Check its connection.</string>
 
     <string name="appwidget_text_loading">Loading…</string>
     <string name="next">Next</string>
@@ -44,8 +44,8 @@
     <string name="configure_app_widget_button_color">Button text color</string>
     <string name="configure_app_widget_text_color">Text color</string>
     <string name="preview_widget">Preview</string>
-    <string name="preview_widget_text">Depressed widget</string>
-    <string name="preview_widget_button">Depressed button</string>
+    <string name="preview_widget_text">Trump widget</string>
+    <string name="preview_widget_button">Trump button</string>
     <string name="pref_title_themes">Use dark theme</string>
     <string name="pref_title_rate_the_app">Rate this app</string>
 
